@@ -74,8 +74,8 @@ function objectToArray ($object) {
 }
 
 function TimKiem2() {
- /*   if(!empty($_POST['search'])){
-        $key = $_POST['search'];
+    if(!empty($_POST['search2'])){
+        $key = $_POST['search2'];
         $key_split = explode(' ', $key);
         
         $tu_khoa = '';
@@ -88,8 +88,8 @@ function TimKiem2() {
             }
             
             $t2++;
-        }*/
-    $url = 'https://shopee.vn/api/v4/search/search_items?by=relevancy&keyword=iphone&limit=10&newest=0&order=desc&page_type=search&version=2';
+        }
+    $url = 'https://shopee.vn/api/v4/search/search_items?by=relevancy&keyword='.$tu_khoa.'&limit=10&newest=0&order=desc&page_type=search&version=2';
     $cURLConnection = curl_init();
 
     curl_setopt($cURLConnection, CURLOPT_URL, $url);
@@ -104,7 +104,10 @@ function TimKiem2() {
     $list = objectToArray($Response);
     
     echo json_encode($list);
-  //  }
+    } else {
+        $ll = [];
+        echo json_encode($ll);
+    }
 }
 ?>
 

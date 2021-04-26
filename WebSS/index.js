@@ -81,6 +81,11 @@ $(document).on('click', "#timKiem2", function () {
         success : function (result){
             var newData = JSON.stringify(result);
             var data = JSON.parse(JSON.parse(newData));
+            
+            if(data.length == 0){
+                alert('Tim kiem tu khoa khac');
+            } else{
+                
             var items = data['items'];
             //console.log(items[0]);
             var data2 = [];
@@ -113,13 +118,9 @@ $(document).on('click', "#timKiem2", function () {
                 data2.push(mau);
             } 
             
-            if(items.length == 0){
-                alert('Tim kiem tu khoa khac');
-            } else{
-               // var link = web + data[0];
-               // window.open(link, '_blank');
-               //   console.log(data2[0]);
+            if(items.length > 0){
                 DanhSachTimKiem(data2, keyy, web);
+            }
             }
         }
     })
