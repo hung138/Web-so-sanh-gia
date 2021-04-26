@@ -1,5 +1,5 @@
 # Web-so-sanh-gia
-web ss lazada, tiki, shopee
+web ss tiki, shopee
 Sử dụng: Netbeans IDE, PHP, Javascript, html, css.
 
 # How to run:
