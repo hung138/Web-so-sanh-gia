@@ -1,7 +1,7 @@
 const ListSP = document.getElementById('ListSP');
 
 // danh sach gom: link anh, tieu de, gia, link.
-function DanhSachTimKiem(danhsach, key, web){
+function DanhSachTimKiem(danhsach, key, web, an, giaSua){
     ListSP.innerHTML = '';
     ListSP.innerHTML += "<h3>Danh sách san pham tu: </h3>";
     ListSP.innerHTML += "<h3>" + web +"</h3>";
@@ -23,14 +23,22 @@ function DanhSachTimKiem(danhsach, key, web){
         divv.innerHTML += "</br>";
         
         var pp2 = document.createElement('h3');
-        pp2.appendChild(document.createTextNode(danhsach[i][2] + ' đ'));
+        if(giaSua == 0){
+            pp2.appendChild(document.createTextNode(danhsach[i][2] + ' đ'));
+        } else{
+            pp2.appendChild(document.createTextNode(GoldToString(danhsach[i][2]) + ' đ'));
+        }
         divv.appendChild(pp2);
         divv.innerHTML += "</br>";
         
         var nut = document.createElement('a');
         nut.appendChild(document.createTextNode('Link'));
         nut.id = 'Link';
-        nut.setAttribute('href', '' + web + danhsach[i][3]);
+        if(an == 1){
+            nut.setAttribute('href', '' + web + danhsach[i][3]);
+        } else{
+            nut.setAttribute('href', danhsach[i][3]);
+        }
         nut.setAttribute('target', '_blank');
         divv.appendChild(nut);
         divv.innerHTML += "</br>";
@@ -52,7 +60,7 @@ $(document).on('click', "#timKiem", function () {
         dataType: "text",
         success : function (result){
             var newData = JSON.stringify(result);
-            //console.log(newData);
+           // console.log(newData);
             
             var data = JSON.parse(JSON.parse(newData)); // parse 2 lan do cai 'price'
             var web = 'https://tiki.vn/';
@@ -64,7 +72,7 @@ $(document).on('click', "#timKiem", function () {
              //   var link = web + data[0];
             //    window.open(link, '_blank');
              //   console.log(data[0]);   
-              DanhSachTimKiem(data, keyy, web);
+              DanhSachTimKiem(data, keyy, web, 1, 0);
             }
         }
     })
@@ -119,7 +127,7 @@ $(document).on('click', "#timKiem2", function () {
             } 
             
             if(items.length > 0){
-                DanhSachTimKiem(data2, keyy, web);
+                DanhSachTimKiem(data2, keyy, web, 1, 0);
             }
             }
         }
@@ -141,6 +149,35 @@ function GoldToString(G){
         
 	gg = g1 + '.' + g2;
     }
-    console.log(gg);
+    //console.log(gg);
     return gg;
 }
+
+$(document).on('click', "#timKiem3", function () {
+    var keyy = document.getElementById('search-input3').value;
+    //console.log(keyy);
+    $.ajax({
+        url:"index.php",
+        method:"POST",
+        data:{search3: keyy},
+        dataType: "text",
+        success : function (result){
+           // console.log(result);
+            var newData = JSON.stringify(result);
+            //console.log(newData);
+            
+            var data = JSON.parse(JSON.parse(newData)); // parse 2 lan do cai 'price'
+            var web = 'https://www.lazada.vn/';
+            console.log(data);
+            
+            if(data.length == 0){
+                alert('Tim kiem tu khoa khac');
+            } else{
+             //   var link = web + data[0];
+            //    window.open(link, '_blank');
+             //   console.log(data[0]);   
+              DanhSachTimKiem(data, keyy, web, 0, 1);
+            }
+        }
+    })
+});

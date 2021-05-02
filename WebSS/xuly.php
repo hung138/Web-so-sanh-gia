@@ -109,5 +109,79 @@ function TimKiem2() {
         echo json_encode($ll);
     }
 }
+
+//$url = 'https://www.lazada.vn/catalog/?ajax=true&q=tu%20lanh&sort=priceasc';
+
+function FinalUrl($link) {
+    $html = file_get_html($link);
+    $div = $html->find('.driect-link')[0];
+    $link = $div->find('a')[0]->href;
+    return $link;
+}
+
+function TimKiem3() {
+     $ll = [];
+     
+    if(!empty($_POST['search3'])){
+        $key = $_POST['search3'];
+        $key_split = explode(' ', $key);
+        
+        $tu_khoa = '';
+        $t2 = 0;
+        foreach ($key_split as $k) {
+            if($t2 == 0){
+                $tu_khoa.=$k;
+            } else {
+                $tu_khoa.='%2B'.$k;
+            }
+            
+            $t2++;
+        }
+        
+    $url = 'https://websosanh.vn/Search/GetListProductRender?param=https%3A%2F%2Fwebsosanh.vn%2Fs%2F'.$tu_khoa.'%3Fmerchant%3D3502170206813664485&isSearch=true&dfilter=merchant%3D3502170206813664485&isShorterSearch=false';
+    $Response = file_get_contents($url);
+    
+    $phoneList = json_decode($Response);
+    $list = (array) $phoneList;
+    $list = objectToArray($phoneList);
+    $kq = $list['data']['result'];
+    
+    $file = 'lazada.html';
+    file_put_contents($file, $kq);
+    
+    $content = file_get_html($file);
+    $listItem = $content->find('.product-item');
+    
+    foreach ($listItem as $item) {
+        //$ten = $item->find('img')[0]->alt;
+        $link = $item->find('a')[0]->href;
+        $link2 = FinalUrl($link);
+        $anh = $item->find('img')[0]->getAttribute('data-src');
+        $gia = $item->find('.product-price')[0]->getAttribute('price');
+        
+        $vt1 = strpos($anh, 'images/');
+        $ten = substr($anh, $vt1 + 7, -1);
+        
+        $vt2 = strpos($ten, '/');    
+        $ten2 = substr($ten, 0, $vt2);
+        
+        $ten3 = str_replace('-', ' ', $ten2);
+        
+        if(strpos($link2, 'lazada')){
+       // if (filter_var($link2, FILTER_VALIDATE_URL)){
+            
+        $chiTiet = [];
+        $chiTiet[] = $anh;
+        $chiTiet[] = $ten3;
+        $chiTiet[] = $gia;
+        $chiTiet[] = $link2;
+        
+        $ll[] = $chiTiet;
+     //   }
+        }
+    }}
+ echo json_encode($ll);
+}
+
 ?>
 

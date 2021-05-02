@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 require 'xuly.php';    
 if(isset($_POST['search'])){
     TimKiem();
@@ -10,6 +11,11 @@ if(isset($_POST['search'])){
 
 if(isset($_POST['search2'])){
     TimKiem2();
+    exit();
+}
+
+if(isset($_POST['search3'])){
+    TimKiem3();
     exit();
 }
 
@@ -28,6 +34,9 @@ if(isset($_POST['search2'])){
        <br>
        <input type="text" name="search" id="search-input2" placeholder="tim Shopee...">
        <button id ="timKiem2" type="button" style="width: 50px; height: 20px; margin: 0;position: absolute;">Search</button>
+       <br>
+       <input type="text" name="search" id="search-input3" placeholder="tim Lazada...">
+       <button id ="timKiem3" type="button" style="width: 50px; height: 20px; margin: 0;position: absolute;">Search</button>
     <div id="ListSP">
                     
                 </div>
