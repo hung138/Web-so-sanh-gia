@@ -1,7 +1,11 @@
-const ListSP = document.getElementById('ListSP');
+const ListSP1 = document.getElementById('ListSP1');
+const ListSP2 = document.getElementById('ListSP2');
+const ListSP3 = document.getElementById('ListSP3');
+
+var xep = 0;
 
 // danh sach gom: link anh, tieu de, gia, link.
-function DanhSachTimKiem(danhsach, key, web, an, giaSua){
+function DanhSachTimKiem(danhsach, key, web, an, giaSua, ListSP){
     ListSP.innerHTML = '';
     ListSP.innerHTML += "<h3>Danh sách san pham tu: </h3>";
     ListSP.innerHTML += "<h3>" + web +"</h3>";
@@ -50,13 +54,30 @@ function DanhSachTimKiem(danhsach, key, web, an, giaSua){
     }
 }
 
-$(document).on('click', "#timKiem", function () {
-    var keyy = document.getElementById('search-input').value;
-    //console.log(keyy);
+function GoldToString(G){
+    var gg = G;
+    var dai = gg.length;
+    if(dai > 6){
+	var g1 = gg.slice(0, dai - 6);
+        var g2 = gg.slice(g1.length, dai - 3);
+        var g3 = gg.slice(g2.length + g1.length, dai);
+        
+        gg = g1 + '.' + g2 + '.' + g3;
+    } else if(dai > 3){
+        var g1 = gg.slice(0, dai - 3);
+        var g2 = gg.slice(g1.length, dai);
+        
+	gg = g1 + '.' + g2;
+    }
+    //console.log(gg);
+    return gg;
+}
+
+function GetTiki(keyy, sort) {
     $.ajax({
         url:"index.php",
         method:"POST",
-        data:{search: keyy},
+        data:{search1: keyy, sort: sort},
         dataType: "text",
         success : function (result){
             var newData = JSON.stringify(result);
@@ -66,25 +87,45 @@ $(document).on('click', "#timKiem", function () {
             var web = 'https://tiki.vn/';
             //console.log(data);
             
+            if(xep != 0){
+                for (var i = 0; i < data.length - 1; i++) {
+                    for (var j = i+1; j < data.length; j++) {
+                        var gia1 = parseInt(data[i][2].replace('.',''));
+                        var gia2 = parseInt(data[j][2].replace('.',''));
+                     
+                        if(xep == 1){
+                        if(gia1 > gia2){
+                            var itemTT = data[i];
+                            data[i] = data[j];
+                            data[j] = itemTT;
+                        }} else{
+                        if(gia1 < gia2){
+                            var itemTT = data[i];
+                            data[i] = data[j];
+                            data[j] = itemTT;
+                        }
+                        }
+                    }
+                }
+            }
+            
             if(data.length == 0){
                 alert('Tim kiem tu khoa khac');
             } else{
              //   var link = web + data[0];
             //    window.open(link, '_blank');
              //   console.log(data[0]);   
-              DanhSachTimKiem(data, keyy, web, 1, 0);
+              DanhSachTimKiem(data, keyy, web, 1, 0, ListSP1);
             }
         }
     })
-});
+}
 
-$(document).on('click', "#timKiem2", function () {
-    var keyy = document.getElementById('search-input2').value;
-    //console.log(keyy);
+function GetShopee(keyy, sort) {
     $.ajax({
         url:"index.php",
         method:"POST",
-        data:{search2: keyy},
+        data:{search2: keyy, sort: sort},
         dataType: "text",
         success : function (result){
             var newData = JSON.stringify(result);
@@ -99,6 +140,28 @@ $(document).on('click', "#timKiem2", function () {
             var data2 = [];
             var webAnh = 'https://cf.shopee.vn/file/';
             var web = 'https://shopee.vn/';
+            
+            if(xep != 0){
+                for (var i = 0; i < items.length - 1; i++) {
+                    for (var j = i+1; j < items.length; j++) {
+                        var gia1 = parseInt(items[i]['item_basic']['price']/100000);
+                        var gia2 = parseInt(items[j]['item_basic']['price']/100000);
+                     
+                        if(xep == 1){
+                        if(gia1 > gia2){
+                            var itemTT = items[i];
+                            items[i] = items[j];
+                            items[j] = itemTT;
+                        }} else{
+                        if(gia1 < gia2){
+                            var itemTT = items[i];
+                            items[i] = items[j];
+                            items[j] = itemTT;
+                        }
+                        }
+                    }
+                }
+            }
             
             for (var i = 0; i < items.length; i++) {
                 var itemID = items[i]['item_basic']['itemid'];
@@ -127,39 +190,20 @@ $(document).on('click', "#timKiem2", function () {
             } 
             
             if(items.length > 0){
-                DanhSachTimKiem(data2, keyy, web, 1, 0);
+                DanhSachTimKiem(data2, keyy, web, 1, 0, ListSP2);
             }
             }
         }
     })
-});
-
-function GoldToString(G){
-    var gg = G;
-    var dai = gg.length;
-    if(dai > 6){
-	var g1 = gg.slice(0, dai - 6);
-        var g2 = gg.slice(g1.length, dai - 3);
-        var g3 = gg.slice(g2.length + g1.length, dai);
-        
-        gg = g1 + '.' + g2 + '.' + g3;
-    } else if(dai > 3){
-        var g1 = gg.slice(0, dai - 3);
-        var g2 = gg.slice(g1.length, dai);
-        
-	gg = g1 + '.' + g2;
-    }
-    //console.log(gg);
-    return gg;
 }
 
-$(document).on('click', "#timKiem3", function () {
-    var keyy = document.getElementById('search-input3').value;
-    //console.log(keyy);
+
+
+function GetLazada(keyy, sort) {
     $.ajax({
         url:"index.php",
         method:"POST",
-        data:{search3: keyy},
+        data:{search3: keyy, sort: sort},
         dataType: "text",
         success : function (result){
            // console.log(result);
@@ -168,7 +212,28 @@ $(document).on('click', "#timKiem3", function () {
             
             var data = JSON.parse(JSON.parse(newData)); // parse 2 lan do cai 'price'
             var web = 'https://www.lazada.vn/';
-            console.log(data);
+            //console.log(data);
+            if(xep != 0){
+                for (var i = 0; i < data.length - 1; i++) {
+                    for (var j = i+1; j < data.length; j++) {
+                        var gia1 = parseInt(data[i][2]);
+                        var gia2 = parseInt(data[j][2]);
+                     
+                        if(xep == 1){
+                        if(gia1 > gia2){
+                            var itemTT = data[i];
+                            data[i] = data[j];
+                            data[j] = itemTT;
+                        }} else{
+                        if(gia1 < gia2){
+                            var itemTT = data[i];
+                            data[i] = data[j];
+                            data[j] = itemTT;
+                        }
+                        }
+                    }
+                }
+            }
             
             if(data.length == 0){
                 alert('Tim kiem tu khoa khac');
@@ -176,8 +241,41 @@ $(document).on('click', "#timKiem3", function () {
              //   var link = web + data[0];
             //    window.open(link, '_blank');
              //   console.log(data[0]);   
-              DanhSachTimKiem(data, keyy, web, 0, 1);
+              DanhSachTimKiem(data, keyy, web, 0, 1, ListSP3);
             }
         }
     })
+}
+
+function TimAll(sort){
+    ListSP1.innerHTML = '';
+    ListSP2.innerHTML = '';
+    ListSP3.innerHTML = '';
+    var keyy = document.getElementById('search-input').value;
+    
+    console.log(keyy);
+    console.log(sort);
+    
+    //GetShopee(keyy, sort);
+    GetLazada(keyy, sort);
+    //GetTiki(keyy, sort);
+}
+
+$(document).on('click', "#timKiem", function (){
+    TimAll(0);
+});
+
+$(document).on('click', "#KoSort", function (){
+    xep = 0;
+    TimAll(0);
+});
+
+$(document).on('click', "#ASC", function (){
+    xep = 1;
+    TimAll(0);
+});
+
+$(document).on('click', "#DESC", function (){
+    xep = 2;
+    TimAll(0);
 });

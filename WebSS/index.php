@@ -3,7 +3,7 @@ session_start();
 
 
 require 'xuly.php';    
-if(isset($_POST['search'])){
+if(isset($_POST['search1'])){
     TimKiem();
     exit();
 }
@@ -29,17 +29,18 @@ if(isset($_POST['search3'])){
         
     </head>
     <body>
-       <input type="text" name="search" id="search-input" placeholder="tim Tiki...">
+        <input type="text" name="search" id="search-input" placeholder="tim ...">
        <button id ="timKiem" type="button" style="width: 50px; height: 20px; margin: 0;position: absolute;">Search</button>
        <br>
-       <input type="text" name="search" id="search-input2" placeholder="tim Shopee...">
-       <button id ="timKiem2" type="button" style="width: 50px; height: 20px; margin: 0;position: absolute;">Search</button>
+       
+       <button id ="KoSort" type="button" style="width: 150px; height: 20px; margin: 0;position: absolute;">Ko xep</button>
        <br>
-       <input type="text" name="search" id="search-input3" placeholder="tim Lazada...">
-       <button id ="timKiem3" type="button" style="width: 50px; height: 20px; margin: 0;position: absolute;">Search</button>
-    <div id="ListSP">
-                    
-                </div>
+       <button id ="ASC" type="button" style="width: 150px; height: 20px; margin: 0;position: absolute;">Gia thap den cao</button>
+       <br>
+       <button id ="DESC" type="button" style="width: 150px; height: 20px; margin: 0;position: absolute;">Gia cao den thap</button>
+    <div id="ListSP1"></div>
+    <div id="ListSP2"></div>
+    <div id="ListSP3"></div>
     </body>
     <script src="PluginJS/jquery.js"></script>
     <script src="index.js"></script>

@@ -4,8 +4,8 @@ include 'simple_html_dom.php';
 function TimKiem() {  // tiki
     $ll = [];
     
-    if(!empty($_POST['search'])){
-        $key = $_POST['search'];
+    if(!empty($_POST['search1'])){
+        $key = $_POST['search1'];
         $key_split = explode(' ', $key);
         
         $tu_khoa = '';
@@ -19,9 +19,20 @@ function TimKiem() {  // tiki
             
             $t2++;
         }
+        $sort = '';
+        if(!empty($_POST['sort'])){
+            $Ksort = $_POST['sort'];
+            if($Ksort == 0){
+                $sort = '';
+            } else if($Ksort == 1){
+                $sort = '&sort=price%2Casc&page=1';
+            } else{
+                $sort = '&sort=price%2Cdesc&page=1';
+            }
+        }
         
         $web = 'https://tiki.vn/';
-        $link = 'https://tiki.vn/search?q='.$tu_khoa.'&ref=searchBar&sort=price%2Casc';
+        $link = 'https://tiki.vn/search?q='.$tu_khoa.$sort;
         $html = file_get_html($link);
         
         $item = '.product-item';
@@ -89,7 +100,20 @@ function TimKiem2() {
             
             $t2++;
         }
-    $url = 'https://shopee.vn/api/v4/search/search_items?by=relevancy&keyword='.$tu_khoa.'&limit=10&newest=0&order=desc&page_type=search&version=2';
+        
+        $sort = '';
+        if(!empty($_POST['sort'])){
+            $Ksort = $_POST['sort'];
+            if($Ksort == 0){
+                $sort = '';
+            } else if($Ksort == 1){
+                $sort = '&order=asc';
+            } else{
+                $sort = '&order=desc';
+            }
+        }
+        
+    $url = 'https://shopee.vn/api/v4/search/search_items?by=relevancy&keyword='.$tu_khoa.'&limit=50&newest=0'.$sort.'&page_type=search&version=2';
     $cURLConnection = curl_init();
 
     curl_setopt($cURLConnection, CURLOPT_URL, $url);
@@ -138,7 +162,19 @@ function TimKiem3() {
             $t2++;
         }
         
-    $url = 'https://websosanh.vn/Search/GetListProductRender?param=https%3A%2F%2Fwebsosanh.vn%2Fs%2F'.$tu_khoa.'%3Fmerchant%3D3502170206813664485&isSearch=true&dfilter=merchant%3D3502170206813664485&isShorterSearch=false';
+        $sort = '';
+        if(!empty($_POST['sort'])){
+            $Ksort = $_POST['sort'];
+            if($Ksort == 0){
+                $sort = '';
+            } else if($Ksort == 1){
+                $sort = '%26s0%3D1';
+            } else{
+                $sort = '%26s0%3D2';
+            }
+        }
+        
+    $url = 'https://websosanh.vn/Search/GetListProductRender?param=https%3A%2F%2Fwebsosanh.vn%2Fs%2F'.$tu_khoa.'%3Fmerchant%3D3502170206813664485'.$sort.'&isSearch=true&dfilter=merchant%3D3502170206813664485&isShorterSearch=false';
     $Response = file_get_contents($url);
     
     $phoneList = json_decode($Response);
