@@ -25,9 +25,9 @@ function TimKiem() {  // tiki
             if($Ksort == 0){
                 $sort = '';
             } else if($Ksort == 1){
-                $sort = '&sort=price%2Casc&page=1';
+                $sort = '&sort=price%2Casc'; //&page=1';
             } else{
-                $sort = '&sort=price%2Cdesc&page=1';
+                $sort = '&sort=price%2Cdesc'; //&page=1';
             }
         }
         
@@ -66,7 +66,7 @@ function TimKiem() {  // tiki
             $ll[] = $chiTiet;
         
             $tt++;
-            if($tt > 10){
+            if($tt > 50){
                 break;
             }
         }
