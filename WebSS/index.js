@@ -7,23 +7,26 @@ var xep = 0;
 // danh sach gom: link anh, tieu de, gia, link.
 function DanhSachTimKiem(danhsach, key, web, an, giaSua, ListSP){
     ListSP.innerHTML = '';
-    ListSP.innerHTML += "<h3>Danh sách san pham tu: </h3>";
+  /*  ListSP.innerHTML += "<h3>Danh sách san pham tu: </h3>";
     ListSP.innerHTML += "<h3>" + web +"</h3>";
     
-    ListSP.innerHTML += "</br>";
+    ListSP.innerHTML += "</br>";*/
+    //var limt = 0;
     
     for (var i = 0; i < danhsach.length; i++) {
+        //if(limt <= 30){
         var divv = document.createElement('div');
         
         var imgg = document.createElement('img');
         imgg.setAttribute('src', danhsach[i][0]);
-        imgg.setAttribute('style', 'width: 200px; height: 200px;');
         divv.appendChild(imgg);
+        imgg.setAttribute('style', 'width: 200px; height: 200px;align:center;');
         divv.innerHTML += "</br>";
         
-        var pp = document.createElement('h3');
+        var pp = document.createElement('p');
         pp.appendChild(document.createTextNode(danhsach[i][1]));
         divv.appendChild(pp);
+        pp.setAttribute('style', 'display: block;font-weight: bold;text-align: center;');
         divv.innerHTML += "</br>";
         
         var pp2 = document.createElement('h3');
@@ -33,6 +36,7 @@ function DanhSachTimKiem(danhsach, key, web, an, giaSua, ListSP){
             pp2.appendChild(document.createTextNode(GoldToString(danhsach[i][2]) + ' đ'));
         }
         divv.appendChild(pp2);
+        pp2.setAttribute('style', 'display: block;font-weight: bold;text-align: center;');
         divv.innerHTML += "</br>";
         
         var nut = document.createElement('a');
@@ -45,12 +49,16 @@ function DanhSachTimKiem(danhsach, key, web, an, giaSua, ListSP){
         }
         nut.setAttribute('target', '_blank');
         divv.appendChild(nut);
+        nut.setAttribute('style', 'display: block;font-weight: bold;text-align: center;');
         divv.innerHTML += "</br>";
         
         ListSP.appendChild(divv);
+        divv.setAttribute('style', 'padding: 10px; margin-left: 90px;');
         
-        ListSP.innerHTML += "</br>";
-        ListSP.innerHTML += "</br>";
+        //ListSP.innerHTML += "</br>";
+        //ListSP.innerHTML += "</br>";
+        //limt++;
+       // }
     }
 }
 
@@ -81,41 +89,67 @@ function GetTiki(keyy, sort) {
         dataType: "text",
         success : function (result){
             var newData = JSON.stringify(result);
-           // console.log(newData);
+            //console.log(newData);
             
             var data = JSON.parse(JSON.parse(newData)); // parse 2 lan do cai 'price'
             var web = 'https://tiki.vn/';
             //console.log(data);
             
+            if(data.length == 0){
+                alert('Tim kiem tu khoa khac');
+            } else{
+                
+            var items = data['data'];
+            //console.log(items[0]);
+            var data2 = [];
+            var webAnh = '';
+            
             if(xep != 0){
-                for (var i = 0; i < data.length - 1; i++) {
-                    for (var j = i+1; j < data.length; j++) {
-                        var gia1 = parseInt(data[i][2].replace('.',''));
-                        var gia2 = parseInt(data[j][2].replace('.',''));
+                for (var i = 0; i < items.length - 1; i++) {
+                    for (var j = i+1; j < items.length; j++) {
+                        var gia1 = parseInt(items[i]['price']/100000);
+                        var gia2 = parseInt(items[j]['price']/100000);
                      
                         if(xep == 1){
                         if(gia1 > gia2){
-                            var itemTT = data[i];
-                            data[i] = data[j];
-                            data[j] = itemTT;
+                            var itemTT = items[i];
+                            items[i] = items[j];
+                            items[j] = itemTT;
                         }} else{
                         if(gia1 < gia2){
-                            var itemTT = data[i];
-                            data[i] = data[j];
-                            data[j] = itemTT;
+                            var itemTT = items[i];
+                            items[i] = items[j];
+                            items[j] = itemTT;
                         }
                         }
                     }
                 }
             }
             
-            if(data.length == 0){
-                alert('Tim kiem tu khoa khac');
-            } else{
-             //   var link = web + data[0];
-            //    window.open(link, '_blank');
-             //   console.log(data[0]);   
-              DanhSachTimKiem(data, keyy, web, 1, 0, ListSP1);
+            for (var i = 0; i < items.length; i++) {
+                var url_path = items[i]['url_path'];
+                var nameTD = items[i]['name'];
+                var imageID = '' + webAnh + items[i]['thumbnail_url'];
+                var gia = '' + items[i]['price'];
+                gia = GoldToString(gia);
+                
+                let link = web + url_path;
+                
+                //console.log(imageID);
+                var mau = [];
+                
+                mau.push(imageID);
+                mau.push(nameTD);
+                mau.push(gia);
+                mau.push(link);
+                
+                data2.push(mau);
+            } 
+            
+            if(items.length > 0){
+               //console.log(data2);
+               DanhSachTimKiem(data2, keyy, web, 0, 0, ListSP1);
+            }
             }
         }
     })
@@ -256,9 +290,10 @@ function TimAll(sort){
     console.log(keyy);
     console.log(sort);
     
-    //GetShopee(keyy, sort);
+    GetTiki(keyy, sort);
+    GetShopee(keyy, sort);
     GetLazada(keyy, sort);
-    //GetTiki(keyy, sort);
+    
 }
 
 $(document).on('click', "#timKiem", function (){

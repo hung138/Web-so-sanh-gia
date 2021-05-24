@@ -2,8 +2,6 @@
 
 include 'simple_html_dom.php';
 function TimKiem() {  // tiki
-    $ll = [];
-    
     if(!empty($_POST['search1'])){
         $key = $_POST['search1'];
         $key_split = explode(' ', $key);
@@ -32,48 +30,25 @@ function TimKiem() {  // tiki
         }
         
         $web = 'https://tiki.vn/';
-        $link = 'https://tiki.vn/search?q='.$tu_khoa.$sort;
-        $html = file_get_html($link);
-        
-        $item = '.product-item';
-        $tt = 0;
-        foreach ($html ->find($item) as $postDiv) {
-     
-            $fullpath = $postDiv ->href;
-            $fullpath = substr($fullpath, 1);
-            $linkPath = substr($fullpath, 0, strpos($fullpath, '?'));
-        
-            $html2 = file_get_html($web.$linkPath);
-            $ten = $html2 ->find('div[class="container"]');
+        $link = 'https://tiki.vn/api/v2/products?limit=48&q='.$tu_khoa.$sort;
+        $cURLConnection = curl_init();
+
+        curl_setopt($cURLConnection, CURLOPT_URL, $link);
+        curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
+
+        $phoneList = curl_exec($cURLConnection);
+        curl_close($cURLConnection);
+
+        $Response = json_decode($phoneList);
     
-            foreach ($ten[0]->find('img') as $anh) {
-                $anh2 = $anh->src;
-                $ten2 = $anh->alt;
-            }
-        
-            $gia = $postDiv ->find('div[class="price-discount__price"]');
-            $gia2 = $gia[0]->plaintext;
-            $gia[0]->href = $gia2;
-            $giaT = $gia[0]->href;
-            $giaTT = substr($giaT, 0, strpos($giaT, ' '));
-        
-            $chiTiet = [];
-            $chiTiet[] = $anh2;
-            $chiTiet[] = $ten2;
-            $chiTiet[] = $giaTT;
-            $chiTiet[] = $linkPath;
-        
-            $ll[] = $chiTiet;
-        
-            $tt++;
-            if($tt > 50){
-                break;
-            }
-        }
-        
+        $list = (array) $Response;
+        $list = objectToArray($Response);
+    
+        echo json_encode($list);
+    } else {
+        $ll = [];
+        echo json_encode($ll);
     }
-    
-    echo json_encode($ll);
 }
 
 function objectToArray ($object) {
