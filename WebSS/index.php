@@ -36,7 +36,53 @@ if(isset($_POST['search3'])){
       href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
       rel="stylesheet"
     />
-    <tit
+    <title>Web so sanh gia</title>
+  </head>
+  <body>
+    <section class="header">
+      <div style="flex: 1" class="logo">
+        <img
+          height="100%"
+          src="Anh/logo.png"
+          alt=""
+        />
+      </div>
+      <div
+        style="flex: 4; display: flex; align-items: center"
+        class="searchbar"
+      >
+        <input  name="search" id="search-input"
+          placeholder="Tìm sản phẩm bạn muốn ..."
+          style="width: 70%; height: 50%; padding: 0 20px"
+          type="text"
+        />
+        <button
+          style="
+            border: none;
+            width: 100px;
+            height: 49%;
+            background-color: rgb(13, 92, 182);
+            color: white;
+            " id="timKiem"
+        >
+          <i class="fas fa-search"></i>
+          Tìm kiếm
+        </button>
+      </div>
+    </section>
+    <section class="main">
+      <div class="main__cover">
+        <img
+          style="width: 100%"
+          src="https://salt.tikicdn.com/cache/w824/ts/banner/f5/db/f6/e8d1a190d76918e545e8b6eb0bc6258a.png.jpg"
+          alt=""
+        />
+      </div>
+      <div class="main__content">
+          <div class="giua">
+              <div>
+              <button id ="KoSort" type="button">Không xếp</button>
+              
               <button id ="ASC" type="button">Giá thấp đến cao</button>
 
               <button id ="DESC" type="button">Giá cao đến thấp</button>

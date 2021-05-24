@@ -6,7 +6,36 @@ var xep = 0;
 
 // danh sach gom: link anh, tieu de, gia, link.
 function DanhSachTimKiem(danhsach, key, web, an, giaSua, ListSP){
-    L
+    ListSP.innerHTML = '';
+    ListSP.innerHTML += "<h3>Danh sách san pham tu: </h3>";
+    ListSP.innerHTML += "<h3>" + web +"</h3>";
+    
+    ListSP.innerHTML += "</br>";
+    
+    for (var i = 0; i < danhsach.length; i++) {
+        var divv = document.createElement('div');
+        
+        var imgg = document.createElement('img');
+        imgg.setAttribute('src', danhsach[i][0]);
+        imgg.setAttribute('style', 'width: 200px; height: 200px;');
+        divv.appendChild(imgg);
+        divv.innerHTML += "</br>";
+        
+        var pp = document.createElement('h3');
+        pp.appendChild(document.createTextNode(danhsach[i][1]));
+        divv.appendChild(pp);
+        divv.innerHTML += "</br>";
+        
+        var pp2 = document.createElement('h3');
+        if(giaSua == 0){
+            pp2.appendChild(document.createTextNode(danhsach[i][2] + ' đ'));
+        } else{
+            pp2.appendChild(document.createTextNode(GoldToString(danhsach[i][2]) + ' đ'));
+        }
+        divv.appendChild(pp2);
+        divv.innerHTML += "</br>";
+        
+        var nut = document.createElement('a');
         nut.appendChild(document.createTextNode('Link'));
         nut.id = 'Link';
         if(an == 1){
@@ -23,6 +52,28 @@ function DanhSachTimKiem(danhsach, key, web, an, giaSua, ListSP){
         ListSP.innerHTML += "</br>";
         ListSP.innerHTML += "</br>";
     }
+}
+
+function GoldToString(G){
+    var gg = G;
+    var dai = gg.length;
+    if(dai > 6){
+	var g1 = gg.slice(0, dai - 6);
+        var g2 = gg.slice(g1.length, dai - 3);
+        var g3 = gg.slice(g2.length + g1.length, dai);
+        
+        gg = g1 + '.' + g2 + '.' + g3;
+    } else if(dai > 3){
+        var g1 = gg.slice(0, dai - 3);
+        var g2 = gg.slice(g1.length, dai);
+        
+	gg = g1 + '.' + g2;
+    }
+    //console.log(gg);
+    return gg;
+}
+
+function GetTiki(keyy, sort) {
     $.ajax({
         url:"index.php",
         method:"POST",
